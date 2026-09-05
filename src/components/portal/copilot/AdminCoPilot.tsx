@@ -143,8 +143,19 @@ export function AdminCoPilot({ embedded = false }: { embedded?: boolean } = {}) 
         },
       ]);
     },
-    onError: (e) => {
-      toast.error(e instanceof Error ? e.message : t("copilot.error"));
+    // Geen foutmelding tonen: we vallen terug op de offline-regelmotor.
+    onError: (_e, variables) => {
+      const offline = getOfflineRuleResponse(variables.content, readOfflineCache());
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `o-${Date.now()}`,
+          role: "assistant",
+          content: offline.reply,
+          offline: true,
+          chips: offline.chips,
+        },
+      ]);
     },
   });
 
