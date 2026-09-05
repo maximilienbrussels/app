@@ -18,6 +18,11 @@ import { cn } from "@/lib/utils";
 import { neonSupabaseCompat as supabase } from "@/lib/neon-auth-compat";
 import { sendEmailTemplateTests } from "@/lib/email-admin.functions";
 import { handleImageError } from "@/lib/image-fallback";
+import {
+  getOfflineRuleResponse,
+  readOfflineCache,
+  type QuickChip,
+} from "@/lib/bot/FallbackRuleEngine";
 
 const TESTABLE_TEMPLATES = ["pickup_ticket", "booking_confirmation", "auth_code", "general_notice"] as const;
 
