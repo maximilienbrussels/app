@@ -7,6 +7,7 @@ import { z } from "zod";
 import { QRCodeSVG } from "qrcode.react";
 import { toast } from "sonner";
 import { NavHeader } from "@/components/NavHeader";
+import { GoogleWalletButton } from "@/components/wallet/GoogleWalletButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -574,6 +575,12 @@ function HoefjesTab({
           </div>
         </div>
       </Card>
+      <GoogleWalletButton
+        memberId={userId}
+        memberName={name ?? "Lid"}
+        hooiBalance={hoefjes}
+        locale={lang as "nl" | "fr" | "en"}
+      />
       <LocalLink
         to={pathFor("pass", lang)}
         className="inline-flex min-h-[48px] items-center rounded-full border border-border bg-card px-6 text-sm font-medium hover:bg-[color:var(--surface-page)]/60"

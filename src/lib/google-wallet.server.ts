@@ -221,3 +221,111 @@ export async function generateGoogleWalletPassUrl(input: {
     creds,
   );
 }
+
+/* ------------------------------------------------------------------ */
+/* Mijn Hooi — digitale ledenpas                                       */
+/* ------------------------------------------------------------------ */
+
+export const MEMBER_CLASS_SUFFIX = "maximilien_hooi_card";
+
+const MEMBER_LABELS: Record<
+  WalletLocale,
+  { title: string; member: string; number: string; balance: string; tier: string; site: string }
+> = {
+  nl: {
+    title: "Mijn Hooi - Digital Pass",
+    member: "Lid",
+    number: "Lidnummer",
+    balance: "Hoefjes",
+    tier: "Status",
+    site: "Website",
+  },
+  fr: {
+    title: "Mijn Hooi - Digital Pass",
+    member: "Membre",
+    number: "Numéro de membre",
+    balance: "Hoefjes",
+    tier: "Statut",
+    site: "Site web",
+  },
+  en: {
+    title: "Mijn Hooi - Digital Pass",
+    member: "Member",
+    number: "Member number",
+    balance: "Hoefjes",
+    tier: "Status",
+    site: "Website",
+  },
+};
+
+export type WalletMemberInput = {
+  memberId: string;
+  memberName: string;
+  hooiBalance: number;
+  tier?: string;
+  locale: WalletLocale;
+};
+
+/** Bouwt het generic-pass object voor de Mijn Hooi ledenkaart. */
+export function buildMemberPassObject(input: WalletMemberInput, issuerId: string) {
+  const l = MEMBER_LABELS[input.locale] ?? MEMBER_LABELS.nl;
+
+  return {
+    id: `${issuerId}.hooi_${sanitizeId(input.memberId)}`,
+    classId: `${issuerId}.${MEMBER_CLASS_SUFFIX}`,
+    state: "ACTIVE",
+    hexBackgroundColor: WALLET_CONFIG.backgroundColor,
+    logo: {
+      sourceUri: { uri: WALLET_CONFIG.logoUri },
+      contentDescription: {
+        defaultValue: { language: input.locale, value: WALLET_CONFIG.locationName },
+      },
+    },
+    cardTitle: {
+      defaultValue: { language: input.locale, value: l.title },
+    },
+    header: {
+      defaultValue: { language: input.locale, value: WALLET_CONFIG.locationName },
+    },
+    subheader: {
+      defaultValue: { language: input.locale, value: l.member },
+    },
+    accountNameLabel: l.member,
+    accountName: input.memberName,
+    accountIdLabel: l.number,
+    accountId: input.memberId,
+    barcode: {
+      type: "QR_CODE",
+      value: `fermemaximilien:customer:${input.memberId}`,
+      alternateText: input.memberId,
+    },
+    textModulesData: [
+      { id: "balance", header: l.balance, body: String(input.hooiBalance) },
+      ...(input.tier ? [{ id: "tier", header: l.tier, body: input.tier }] : []),
+    ],
+    linksModuleData: {
+      uris: [{ uri: WALLET_CONFIG.homepage, description: l.site, id: "website" }],
+    },
+    locations: [
+      { latitude: WALLET_CONFIG.location.latitude, longitude: WALLET_CONFIG.location.longitude },
+    ],
+  };
+}
+
+/** Bouwt de "save to wallet" URL voor de Mijn Hooi ledenkaart. */
+export async function createMemberSaveUrl(
+  input: WalletMemberInput,
+  creds: WalletCredentials,
+) {
+  const claims = {
+    iss: creds.clientEmail,
+    aud: "google",
+    typ: "savetowallet",
+    iat: Math.floor(Date.now() / 1000),
+    origins: [...WALLET_CONFIG.origins],
+    payload: { genericObjects: [buildMemberPassObject(input, creds.issuerId)] },
+  };
+
+  const token = await signRs256(claims, creds.privateKey);
+  return `https://pay.google.com/gp/v/save/${token}`;
+}

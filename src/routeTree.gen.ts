@@ -127,6 +127,7 @@ import { Route as ApiPublicWebhooksStripeRouteImport } from './routes/api/public
 import { Route as ApiSponsorshipCertificateCertificateIdRouteImport } from './routes/api/sponsorship/certificate/$certificateId'
 import { Route as ApiV1MaximAnnouncementsRouteImport } from './routes/api/v1/maxim/announcements'
 import { Route as ApiV1ProductsIdRouteImport } from './routes/api/v1/products/$id'
+import { Route as ApiWalletGooglePassRouteImport } from './routes/api/wallet/google/pass'
 import { Route as ApiV1BookingsIdCheckinRouteImport } from './routes/api/v1/bookings/$id/checkin'
 
 const IndexRoute = IndexRouteImport.update({
@@ -729,6 +730,11 @@ const ApiV1ProductsIdRoute = ApiV1ProductsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ApiV1ProductsRoute,
 } as any)
+const ApiWalletGooglePassRoute = ApiWalletGooglePassRouteImport.update({
+  id: '/api/wallet/google/pass',
+  path: '/api/wallet/google/pass',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiV1BookingsIdCheckinRoute = ApiV1BookingsIdCheckinRouteImport.update({
   id: '/$id/checkin',
   path: '/$id/checkin',
@@ -853,6 +859,7 @@ export interface FileRoutesByFullPath {
   '/api/sponsorship/certificate/$certificateId': typeof ApiSponsorshipCertificateCertificateIdRoute
   '/api/v1/maxim/announcements': typeof ApiV1MaximAnnouncementsRoute
   '/api/v1/products/$id': typeof ApiV1ProductsIdRoute
+  '/api/wallet/google/pass': typeof ApiWalletGooglePassRoute
   '/api/v1/bookings/$id/checkin': typeof ApiV1BookingsIdCheckinRoute
 }
 export interface FileRoutesByTo {
@@ -971,6 +978,7 @@ export interface FileRoutesByTo {
   '/api/sponsorship/certificate/$certificateId': typeof ApiSponsorshipCertificateCertificateIdRoute
   '/api/v1/maxim/announcements': typeof ApiV1MaximAnnouncementsRoute
   '/api/v1/products/$id': typeof ApiV1ProductsIdRoute
+  '/api/wallet/google/pass': typeof ApiWalletGooglePassRoute
   '/api/v1/bookings/$id/checkin': typeof ApiV1BookingsIdCheckinRoute
 }
 export interface FileRoutesById {
@@ -1093,6 +1101,7 @@ export interface FileRoutesById {
   '/api/sponsorship/certificate/$certificateId': typeof ApiSponsorshipCertificateCertificateIdRoute
   '/api/v1/maxim/announcements': typeof ApiV1MaximAnnouncementsRoute
   '/api/v1/products/$id': typeof ApiV1ProductsIdRoute
+  '/api/wallet/google/pass': typeof ApiWalletGooglePassRoute
   '/api/v1/bookings/$id/checkin': typeof ApiV1BookingsIdCheckinRoute
 }
 export interface FileRouteTypes {
@@ -1215,6 +1224,7 @@ export interface FileRouteTypes {
     | '/api/sponsorship/certificate/$certificateId'
     | '/api/v1/maxim/announcements'
     | '/api/v1/products/$id'
+    | '/api/wallet/google/pass'
     | '/api/v1/bookings/$id/checkin'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -1333,6 +1343,7 @@ export interface FileRouteTypes {
     | '/api/sponsorship/certificate/$certificateId'
     | '/api/v1/maxim/announcements'
     | '/api/v1/products/$id'
+    | '/api/wallet/google/pass'
     | '/api/v1/bookings/$id/checkin'
   id:
     | '__root__'
@@ -1454,6 +1465,7 @@ export interface FileRouteTypes {
     | '/api/sponsorship/certificate/$certificateId'
     | '/api/v1/maxim/announcements'
     | '/api/v1/products/$id'
+    | '/api/wallet/google/pass'
     | '/api/v1/bookings/$id/checkin'
   fileRoutesById: FileRoutesById
 }
@@ -1561,6 +1573,7 @@ export interface RootRouteChildren {
   ApiPublicWebhooksStripeRoute: typeof ApiPublicWebhooksStripeRoute
   ApiSponsorshipCertificateCertificateIdRoute: typeof ApiSponsorshipCertificateCertificateIdRoute
   ApiV1MaximAnnouncementsRoute: typeof ApiV1MaximAnnouncementsRoute
+  ApiWalletGooglePassRoute: typeof ApiWalletGooglePassRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -2391,6 +2404,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1ProductsIdRouteImport
       parentRoute: typeof ApiV1ProductsRoute
     }
+    '/api/wallet/google/pass': {
+      id: '/api/wallet/google/pass'
+      path: '/api/wallet/google/pass'
+      fullPath: '/api/wallet/google/pass'
+      preLoaderRoute: typeof ApiWalletGooglePassRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/v1/bookings/$id/checkin': {
       id: '/api/v1/bookings/$id/checkin'
       path: '/$id/checkin'
@@ -2593,6 +2613,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSponsorshipCertificateCertificateIdRoute:
     ApiSponsorshipCertificateCertificateIdRoute,
   ApiV1MaximAnnouncementsRoute: ApiV1MaximAnnouncementsRoute,
+  ApiWalletGooglePassRoute: ApiWalletGooglePassRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
