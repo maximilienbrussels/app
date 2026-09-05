@@ -218,7 +218,7 @@ export const Route = createFileRoute("/api/admin/co-pilot")({
         try {
           const result = await generateText({
             model,
-            system: `${SYSTEM_PROMPT}\nTaal van de beheerder: ${lang}.`,
+            system: `${SYSTEM_PROMPT}\nTaal van de beheerder: ${lang}.\n\n=== LIVE DATABASEWAARDEN (${new Date().toISOString().slice(0, 16)}) ===\n${liveContext}`,
             messages: aiMessages as never,
             tools,
             stopWhen: stepCountIs(4),
