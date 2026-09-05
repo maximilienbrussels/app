@@ -1,0 +1,27 @@
+{
+  "name": "Stadsboerderij Maximiliaan",
+  "short_name": "Maximiliaan",
+  "description": "De stadsboerderij in het hart van Brussel",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#1D3528",
+  "theme_color": "#1D3528",
+  "lang": "nl",
+  "categories": ["education", "lifestyle", "travel"],
+  "icons": [
+    {
+      "src": "/icons/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
