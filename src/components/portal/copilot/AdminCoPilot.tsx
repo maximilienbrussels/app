@@ -39,6 +39,9 @@ type ChatMessage = {
   content: string;
   imageUrls?: string[];
   actions?: ChatAction[];
+  /** Antwoord kwam van de offline-regelmotor (AI onbereikbaar). */
+  offline?: boolean;
+  chips?: QuickChip[];
 };
 
 type PendingImage = { url: string; name: string };
