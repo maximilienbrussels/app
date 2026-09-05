@@ -49,6 +49,7 @@ import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as ApiCreatePaymentIntentRouteImport } from './routes/api/create-payment-intent'
 import { Route as ApiGenerateGoogleWalletPassRouteImport } from './routes/api/generate-google-wallet-pass'
+import { Route as ApiRouteMapRouteImport } from './routes/api/route-map'
 import { Route as ApiStripeConfigRouteImport } from './routes/api/stripe-config'
 import { Route as ApiTranscribeRouteImport } from './routes/api/transcribe'
 import { Route as ApiTransitRouteImport } from './routes/api/transit'
@@ -331,6 +332,11 @@ const ApiGenerateGoogleWalletPassRoute =
     path: '/api/generate-google-wallet-pass',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiRouteMapRoute = ApiRouteMapRouteImport.update({
+  id: '/api/route-map',
+  path: '/api/route-map',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiStripeConfigRoute = ApiStripeConfigRouteImport.update({
   id: '/api/stripe-config',
   path: '/api/stripe-config',
@@ -779,6 +785,7 @@ export interface FileRoutesByFullPath {
   '/api/contact': typeof ApiContactRoute
   '/api/create-payment-intent': typeof ApiCreatePaymentIntentRoute
   '/api/generate-google-wallet-pass': typeof ApiGenerateGoogleWalletPassRoute
+  '/api/route-map': typeof ApiRouteMapRoute
   '/api/stripe-config': typeof ApiStripeConfigRoute
   '/api/transcribe': typeof ApiTranscribeRoute
   '/api/transit': typeof ApiTransitRoute
@@ -898,6 +905,7 @@ export interface FileRoutesByTo {
   '/api/contact': typeof ApiContactRoute
   '/api/create-payment-intent': typeof ApiCreatePaymentIntentRoute
   '/api/generate-google-wallet-pass': typeof ApiGenerateGoogleWalletPassRoute
+  '/api/route-map': typeof ApiRouteMapRoute
   '/api/stripe-config': typeof ApiStripeConfigRoute
   '/api/transcribe': typeof ApiTranscribeRoute
   '/api/transit': typeof ApiTransitRoute
@@ -1021,6 +1029,7 @@ export interface FileRoutesById {
   '/api/contact': typeof ApiContactRoute
   '/api/create-payment-intent': typeof ApiCreatePaymentIntentRoute
   '/api/generate-google-wallet-pass': typeof ApiGenerateGoogleWalletPassRoute
+  '/api/route-map': typeof ApiRouteMapRoute
   '/api/stripe-config': typeof ApiStripeConfigRoute
   '/api/transcribe': typeof ApiTranscribeRoute
   '/api/transit': typeof ApiTransitRoute
@@ -1144,6 +1153,7 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/api/create-payment-intent'
     | '/api/generate-google-wallet-pass'
+    | '/api/route-map'
     | '/api/stripe-config'
     | '/api/transcribe'
     | '/api/transit'
@@ -1263,6 +1273,7 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/api/create-payment-intent'
     | '/api/generate-google-wallet-pass'
+    | '/api/route-map'
     | '/api/stripe-config'
     | '/api/transcribe'
     | '/api/transit'
@@ -1385,6 +1396,7 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/api/create-payment-intent'
     | '/api/generate-google-wallet-pass'
+    | '/api/route-map'
     | '/api/stripe-config'
     | '/api/transcribe'
     | '/api/transit'
@@ -1501,6 +1513,7 @@ export interface RootRouteChildren {
   ApiContactRoute: typeof ApiContactRoute
   ApiCreatePaymentIntentRoute: typeof ApiCreatePaymentIntentRoute
   ApiGenerateGoogleWalletPassRoute: typeof ApiGenerateGoogleWalletPassRoute
+  ApiRouteMapRoute: typeof ApiRouteMapRoute
   ApiStripeConfigRoute: typeof ApiStripeConfigRoute
   ApiTranscribeRoute: typeof ApiTranscribeRoute
   ApiTransitRoute: typeof ApiTransitRoute
@@ -1856,6 +1869,13 @@ declare module '@tanstack/react-router' {
       path: '/api/generate-google-wallet-pass'
       fullPath: '/api/generate-google-wallet-pass'
       preLoaderRoute: typeof ApiGenerateGoogleWalletPassRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/route-map': {
+      id: '/api/route-map'
+      path: '/api/route-map'
+      fullPath: '/api/route-map'
+      preLoaderRoute: typeof ApiRouteMapRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/stripe-config': {
@@ -2540,6 +2560,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiContactRoute: ApiContactRoute,
   ApiCreatePaymentIntentRoute: ApiCreatePaymentIntentRoute,
   ApiGenerateGoogleWalletPassRoute: ApiGenerateGoogleWalletPassRoute,
+  ApiRouteMapRoute: ApiRouteMapRoute,
   ApiStripeConfigRoute: ApiStripeConfigRoute,
   ApiTranscribeRoute: ApiTranscribeRoute,
   ApiTransitRoute: ApiTransitRoute,
