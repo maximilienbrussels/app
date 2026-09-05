@@ -235,9 +235,9 @@ export const Route = createFileRoute("/api/admin/co-pilot")({
           });
           return Response.json({ reply: result.text || "Actie uitgevoerd.", actions: executed });
         } catch (err) {
-          console.error("[co-pilot] fout:", err);
+          console.error("[maxim-ai] fout:", err);
           return Response.json(
-            { error: "De Co-Pilot kon niet antwoorden.", reply: "Er ging iets mis, probeer het opnieuw.", actions: executed },
+            { error: "Maxim AI kon niet antwoorden.", reply: "Er ging iets mis, probeer het opnieuw.", actions: executed },
             { status: 500 },
           );
         }
