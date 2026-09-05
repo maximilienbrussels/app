@@ -8,6 +8,14 @@ import { MapContainer, Marker, Polyline, TileLayer, Tooltip, useMap } from "reac
 import "leaflet/dist/leaflet.css";
 
 import type { RouteMapResult } from "@/routes/api/route-map";
+import type { Lang } from "@/lib/i18n";
+
+/** Label voor de vertrekmarker in de taal van het gesprek. */
+const YOU_LABEL: Record<Lang, string> = {
+  nl: "Jouw Locatie",
+  fr: "Votre Position",
+  en: "Your Location",
+};
 
 function pin(color: string) {
   return L.divIcon({
@@ -26,9 +34,10 @@ function FitRoute({ path }: { path: [number, number][] }) {
   return null;
 }
 
-export default function RouteMapCanvas({ data }: { data: RouteMapResult }) {
+export default function RouteMapCanvas({ data, lang }: { data: RouteMapResult; lang: Lang }) {
   const start: [number, number] = [data.start.lat, data.start.lon];
   const end: [number, number] = [data.end.lat, data.end.lon];
+  const youLabel = YOU_LABEL[lang] ?? YOU_LABEL.nl;
 
   return (
     <MapContainer
@@ -40,11 +49,11 @@ export default function RouteMapCanvas({ data }: { data: RouteMapResult }) {
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <Polyline positions={data.path} pathOptions={{ color: "#c2410c", weight: 5, opacity: 0.9 }} />
       <Marker position={start} icon={pin("#0f766e")}>
-        <Tooltip>{data.start.label}</Tooltip>
+        <Tooltip>{youLabel}</Tooltip>
       </Marker>
       <Marker position={end} icon={pin("#c2410c")}>
         <Tooltip>{data.end.label}</Tooltip>
