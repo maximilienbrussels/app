@@ -35,7 +35,7 @@ const dict: Dict = {
   "nav.email": { fr: "E-mail", nl: "E-mail", en: "Email" },
   "nav.more": { fr: "Plus", nl: "Meer", en: "More" },
   "nav.api": { fr: "API & Intégrations", nl: "API & Integraties", en: "API & Integrations" },
-  "nav.copilot": { fr: "Co-Pilote", nl: "Co-Pilot", en: "Co-Pilot" },
+  "nav.copilot": { fr: "Maxim AI", nl: "Maxim AI", en: "Maxim AI" },
 
 
   // API keys
@@ -564,11 +564,11 @@ const dict: Dict = {
 
 /** Losse woordenboeken per pagina worden hier samengevoegd. */
 const copilotDict: Dict = {
-  "copilot.title": { fr: "Co-Pilote Admin", nl: "Admin Co-Pilot", en: "Admin Co-Pilot" },
+  "copilot.title": { fr: "Maxim AI Assistant", nl: "Maxim AI Assistent", en: "Maxim AI Assistant" },
   "copilot.subtitle": {
-    fr: "Demandez au Co-Pilote de modifier les paramètres du site, les tarifs, les horaires ou les images.",
-    nl: "Vraag de Co-Pilot om site-instellingen, tarieven, openingsuren of afbeeldingen aan te passen.",
-    en: "Ask the Co-Pilot to update site settings, rates, opening hours or images.",
+    fr: "Demandez à Maxim AI de modifier les paramètres du site, les tarifs, les horaires ou les images.",
+    nl: "Vraag Maxim AI om site-instellingen, tarieven, openingsuren of afbeeldingen aan te passen.",
+    en: "Ask Maxim AI to update site settings, rates, opening hours or images.",
   },
   "copilot.placeholder": {
     fr: "Écrivez votre demande…",
@@ -582,7 +582,7 @@ const copilotDict: Dict = {
     nl: "Zet hier een afbeelding neer (PNG, JPG, WebP)",
     en: "Drop an image here (PNG, JPG, WebP)",
   },
-  "copilot.thinking": { fr: "Le Co-Pilote réfléchit…", nl: "De Co-Pilot denkt na…", en: "The Co-Pilot is thinking…" },
+  "copilot.thinking": { fr: "Maxim AI réfléchit…", nl: "Maxim AI denkt na…", en: "Maxim AI is thinking…" },
   "copilot.actionExecuted": { fr: "Action exécutée", nl: "Actie uitgevoerd", en: "Action executed" },
   "copilot.viewLive": { fr: "[ Voir en ligne sur le site ]", nl: "[ Bekijk live op website ]", en: "[ View live on website ]" },
   "copilot.sendTestMail": { fr: "[ Envoyer un e-mail test ]", nl: "[ Stuur testmail ]", en: "[ Send test email ]" },

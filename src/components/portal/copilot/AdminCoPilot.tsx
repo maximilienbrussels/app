@@ -18,6 +18,11 @@ import { cn } from "@/lib/utils";
 import { neonSupabaseCompat as supabase } from "@/lib/neon-auth-compat";
 import { sendEmailTemplateTests } from "@/lib/email-admin.functions";
 import { handleImageError } from "@/lib/image-fallback";
+import {
+  getOfflineRuleResponse,
+  readOfflineCache,
+  type QuickChip,
+} from "@/lib/bot/FallbackRuleEngine";
 
 const TESTABLE_TEMPLATES = ["pickup_ticket", "booking_confirmation", "auth_code", "general_notice"] as const;
 
@@ -39,6 +44,9 @@ type ChatMessage = {
   content: string;
   imageUrls?: string[];
   actions?: ChatAction[];
+  /** Antwoord kwam van de offline-regelmotor (AI onbereikbaar). */
+  offline?: boolean;
+  chips?: QuickChip[];
 };
 
 type PendingImage = { url: string; name: string };
@@ -135,8 +143,19 @@ export function AdminCoPilot({ embedded = false }: { embedded?: boolean } = {}) 
         },
       ]);
     },
-    onError: (e) => {
-      toast.error(e instanceof Error ? e.message : t("copilot.error"));
+    // Geen foutmelding tonen: we vallen terug op de offline-regelmotor.
+    onError: (_e, variables) => {
+      const offline = getOfflineRuleResponse(variables.content, readOfflineCache());
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `o-${Date.now()}`,
+          role: "assistant",
+          content: offline.reply,
+          offline: true,
+          chips: offline.chips,
+        },
+      ]);
     },
   });
 
@@ -253,6 +272,26 @@ export function AdminCoPilot({ embedded = false }: { embedded?: boolean } = {}) 
             >
               {m.content}
             </div>
+            {m.offline ? (
+              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800">
+                ⚡ Offline-assistent
+              </span>
+            ) : null}
+            {m.chips?.length ? (
+              <div className="flex flex-wrap gap-2">
+                {m.chips.map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => send(c.label)}
+                    className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium transition hover:bg-muted"
+                  >
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+
             {m.imageUrls?.length ? (
               <div className="flex flex-wrap gap-2">
                 {m.imageUrls.map((u) => (

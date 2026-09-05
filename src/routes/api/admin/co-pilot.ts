@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 type Part = { type: "text"; text: string } | { type: "image_url"; imageUrl: string };
 type InMsg = { role: "user" | "assistant"; content: string; imageUrls?: string[] };
 
-const SYSTEM_PROMPT = `Je bent Maxim AI, de beheerassistent van het beheerportaal van Ferme du Parc Maximilien.
+const SYSTEM_PROMPT = `Je bent Maxim AI, de beheerassistent van het beheerportaal van Maximilien (stadsboerderij Maximilien; in het Frans: La Ferme du Parc Maximilien).
 Je helpt uitsluitend met deze concrete acties via de beschikbare tools:
 - site-instellingen aanpassen (adres, aankondigingsbalk, noodmelding);
 - een dienstprijs of tarief aanpassen;
@@ -13,7 +13,9 @@ Je helpt uitsluitend met deze concrete acties via de beschikbare tools:
 - de hero-afbeelding van een pagina wijzigen;
 - de foto van een product wijzigen;
 - de header-/banner-afbeelding van een e-mailsjabloon wijzigen.
-Weiger vriendelijk maar kort elk ander verzoek (code schrijven, onderwerpen buiten deze lijst, het aanmaken/verwijderen van tabellen, enz.) met: "Daar kan ik als Co-Pilot niet bij helpen — ik pas alleen site-instellingen, tarieven, openingsuren, pagina-afbeeldingen, productfoto's en e-mailsjablonen aan."
+Weiger vriendelijk maar kort elk ander verzoek (code schrijven, onderwerpen buiten deze lijst, het aanmaken/verwijderen van tabellen, enz.) met: "Daar kan ik als Maxim AI niet bij helpen — ik pas alleen site-instellingen, tarieven, openingsuren, pagina-afbeeldingen, productfoto's en e-mailsjablonen aan."
+Gebruik altijd eerst de meegegeven live databasewaarden: noem het huidige bedrag of de huidige waarde vóór je een wijziging voorstelt, bijvoorbeeld "Het huidige tarief voor de zaalhuur is €150. Zal ik dit aanpassen naar €50?".
+Als een vraag dubbelzinnig is (welk tarief, welke periode), vraag dan eerst kort om bevestiging in plaats van meteen te wijzigen.
 Voer nooit een actie uit zonder dat de gevraagde informatie duidelijk is; vraag anders kort om verduidelijking.
 Antwoord altijd kort en in het Nederlands, Frans of Engels naargelang de taal van de beheerder.`;
 
@@ -213,19 +215,29 @@ export const Route = createFileRoute("/api/admin/co-pilot")({
           };
         });
 
+        // Live databasewaarden (tarieven, diensten, producten, instellingen)
+        // meegeven, zodat Maxim AI het huidige bedrag kent vóór een wijziging.
+        let liveContext = "Geen live databasewaarden beschikbaar.";
+        try {
+          const { buildLiveDataContext } = await import("@/lib/ai/db-context.server");
+          liveContext = await buildLiveDataContext();
+        } catch (err) {
+          console.error("[maxim-ai] databasecontext mislukt:", err);
+        }
+
         try {
           const result = await generateText({
             model,
-            system: `${SYSTEM_PROMPT}\nTaal van de beheerder: ${lang}.`,
+            system: `${SYSTEM_PROMPT}\nTaal van de beheerder: ${lang}.\n\n=== LIVE DATABASEWAARDEN (${new Date().toISOString().slice(0, 16)}) ===\n${liveContext}`,
             messages: aiMessages as never,
             tools,
             stopWhen: stepCountIs(4),
           });
           return Response.json({ reply: result.text || "Actie uitgevoerd.", actions: executed });
         } catch (err) {
-          console.error("[co-pilot] fout:", err);
+          console.error("[maxim-ai] fout:", err);
           return Response.json(
-            { error: "De Co-Pilot kon niet antwoorden.", reply: "Er ging iets mis, probeer het opnieuw.", actions: executed },
+            { error: "Maxim AI kon niet antwoorden.", reply: "Er ging iets mis, probeer het opnieuw.", actions: executed },
             { status: 500 },
           );
         }
