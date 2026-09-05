@@ -7,6 +7,7 @@ import { z } from "zod";
 import { QRCodeSVG } from "qrcode.react";
 import { toast } from "sonner";
 import { NavHeader } from "@/components/NavHeader";
+import { GoogleWalletButton } from "@/components/wallet/GoogleWalletButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
