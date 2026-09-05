@@ -17,6 +17,9 @@ const UA = "FermeMaximilienChat/1.0 (info@lafermeduparcmaximilien.be)";
 
 export type RouteProfile = "foot" | "bike";
 
+/** Boven deze hemelsbrede afstand sturen we bezoekers naar het openbaar vervoer. */
+export const TRANSIT_THRESHOLD_METERS = 5000;
+
 export type RouteMapResult = {
   start: { lat: number; lon: number; label: string };
   end: { lat: number; lon: number; label: string };
@@ -25,7 +28,23 @@ export type RouteMapResult = {
   path: [number, number][];
   distanceMeters: number;
   durationSeconds: number;
+  /** Hemelsbrede afstand tot de boerderij. */
+  crowFliesMeters: number;
+  /** "map" = kaart met wandel-/fietsroute, "transit" = te ver, gebruik MIVB/NMBS. */
+  mode: "map" | "transit";
 };
+
+/** Hemelsbrede afstand (meter) tussen twee punten. */
+function haversine(a: { lat: number; lon: number }, b: { lat: number; lon: number }): number {
+  const R = 6_371_000;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLon = toRad(b.lon - a.lon);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
 
 async function geocode(query: string): Promise<{ lat: number; lon: number; label: string } | null> {
   const url =
@@ -156,11 +175,14 @@ export const Route = createFileRoute("/api/route-map")({
           return Response.json({ error: "route_failed" }, { status: 502 });
         }
 
+        const crowFliesMeters = haversine(origin, FARM_COORD);
         const result: RouteMapResult = {
           start: origin,
           end: { ...FARM_COORD, label: FARM_LABEL },
           profile,
           ...directions,
+          crowFliesMeters,
+          mode: crowFliesMeters > TRANSIT_THRESHOLD_METERS ? "transit" : "map",
         };
         return Response.json(result, { headers: { "Cache-Control": "no-store" } });
       },
