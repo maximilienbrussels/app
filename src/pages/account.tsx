@@ -574,6 +574,12 @@ function HoefjesTab({
           </div>
         </div>
       </Card>
+      <GoogleWalletButton
+        memberId={userId}
+        memberName={name ?? "Lid"}
+        hooiBalance={hoefjes}
+        locale={lang as "nl" | "fr" | "en"}
+      />
       <LocalLink
         to={pathFor("pass", lang)}
         className="inline-flex min-h-[48px] items-center rounded-full border border-border bg-card px-6 text-sm font-medium hover:bg-[color:var(--surface-page)]/60"
