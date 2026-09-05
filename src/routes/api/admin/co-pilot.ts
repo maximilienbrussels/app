@@ -215,6 +215,16 @@ export const Route = createFileRoute("/api/admin/co-pilot")({
           };
         });
 
+        // Live databasewaarden (tarieven, diensten, producten, instellingen)
+        // meegeven, zodat Maxim AI het huidige bedrag kent vóór een wijziging.
+        let liveContext = "Geen live databasewaarden beschikbaar.";
+        try {
+          const { buildLiveDataContext } = await import("@/lib/ai/db-context.server");
+          liveContext = await buildLiveDataContext();
+        } catch (err) {
+          console.error("[maxim-ai] databasecontext mislukt:", err);
+        }
+
         try {
           const result = await generateText({
             model,
