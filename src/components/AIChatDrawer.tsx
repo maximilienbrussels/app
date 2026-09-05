@@ -29,6 +29,7 @@ import { MaximInlineCard } from "@/components/chat/MaximCards";
 import { CompostChecker } from "@/components/chat/CompostChecker";
 import { PrintItineraryButton, isPrintable } from "@/components/chat/PrintItinerary";
 import { MapsLinkButton, isTransitAnswer } from "@/components/chat/MapsLink";
+import { ChatRouteMap, extractRouteMarker } from "@/components/chat/ChatRouteMap";
 import { FarmAssetCard } from "@/components/chat/FarmAssetCard";
 import { CalendarExportButton, isSchedule } from "@/components/chat/CalendarExport";
 import { useQuery } from "@tanstack/react-query";
@@ -1288,8 +1289,10 @@ export function AIChatDrawer(props: Props = {}) {
               ? raw.text.replace(/\[\[compost-checker\]\]/g, "").trim()
               : raw.text;
             // Enkel echte foto's uit het statische manifest — nooit AI-beelden.
-            const marker = m.role === "user" ? null : extractAssetMarker(withoutCompost, farmAssets ?? FARM_ASSETS);
-            const text = marker ? marker.clean : withoutCompost;
+            const routeMarker = m.role === "user" ? null : extractRouteMarker(withoutCompost);
+            const withoutRoute = routeMarker ? routeMarker.clean : withoutCompost;
+            const marker = m.role === "user" ? null : extractAssetMarker(withoutRoute, farmAssets ?? FARM_ASSETS);
+            const text = marker ? marker.clean : withoutRoute;
             const farmAsset =
               m.role === "user" || !text ? null : (marker?.asset ?? findFarmAsset(text, farmAssets ?? FARM_ASSETS));
             const image = raw.image;
@@ -1335,7 +1338,11 @@ export function AIChatDrawer(props: Props = {}) {
                     <PrintItineraryButton text={text} lang={lang} />
                   ) : null}
 
-                  {!isUser && !streaming && text && isTransitAnswer(text) ? (
+                  {!isUser && !streaming && routeMarker ? (
+                    <ChatRouteMap start={routeMarker.start} lang={lang} />
+                  ) : null}
+
+                  {!isUser && !streaming && !routeMarker && text && isTransitAnswer(text) ? (
                     <MapsLinkButton lang={lang} />
                   ) : null}
 
