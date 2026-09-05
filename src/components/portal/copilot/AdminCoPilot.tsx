@@ -272,6 +272,26 @@ export function AdminCoPilot({ embedded = false }: { embedded?: boolean } = {}) 
             >
               {m.content}
             </div>
+            {m.offline ? (
+              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800">
+                ⚡ Offline-assistent
+              </span>
+            ) : null}
+            {m.chips?.length ? (
+              <div className="flex flex-wrap gap-2">
+                {m.chips.map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => send(c.label)}
+                    className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium transition hover:bg-muted"
+                  >
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+
             {m.imageUrls?.length ? (
               <div className="flex flex-wrap gap-2">
                 {m.imageUrls.map((u) => (
