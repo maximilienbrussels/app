@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
 import googleAsset from "@/assets/google-wallet.png";
 import { handleImageError } from "@/lib/image-fallback";
 

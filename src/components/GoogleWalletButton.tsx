@@ -70,7 +70,11 @@ export function GoogleWalletButton({
         );
         return;
       }
-      window.open(data.saveUrl, "_blank", "noopener,noreferrer");
+      const link = document.createElement("a");
+      link.href = data.saveUrl;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.click();
     } catch {
       toast.error(copy.failed);
     } finally {
